@@ -8,10 +8,23 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Post extends Model
 {
+    // secara default menggunakan table posts (karena eloquent)
     use HasFactory;
     use SoftDeletes;
 
-    // secara default menggunakan table posts (karena eloquent)
+    public $fillable = [
+        'title',
+        'content',
+    ];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($post) {
+            $post->slug = str_replace(' ', '-', $post->title);
+        });
+    }
 
     public function comments()
     {
@@ -28,6 +41,4 @@ class Post extends Model
     {
         return $query->where('active', true);
     }
-
-
 }

@@ -42,11 +42,9 @@ class PostController extends Controller
         $title = $request->input('title');
         $content = $request->input('content');
 
-        Post::insert([
+        Post::create([
             'title' => $title,
             'content' => $content,
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
         ]);
 
         return redirect('posts');
@@ -57,7 +55,7 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        $selected_post = Post::where('id', '=', $id)->first();
+        $selected_post = Post::where('id', $id)->first();
         $comments = $selected_post->comments()->get();
         $total_comments = $selected_post->total_comments();
 
