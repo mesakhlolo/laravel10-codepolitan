@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
@@ -13,6 +14,10 @@ class PostController extends Controller
      */
     public function index()
     {
+        if (!Auth::check()) {
+            return redirect('logout');
+        }
+
         $posts = Post::active()->get();
         // $posts = DB::table('posts')
         //     ->select('id', 'title', 'content', 'created_at')
@@ -31,6 +36,10 @@ class PostController extends Controller
      */
     public function create()
     {
+        if (!Auth::check()) {
+            return redirect('logout');
+        }
+
         return view('posts.create');
     }
 
@@ -39,6 +48,10 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        if (!Auth::check()) {
+            return redirect('logout');
+        }
+
         $title = $request->input('title');
         $content = $request->input('content');
 
@@ -55,6 +68,10 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
+        if (!Auth::check()) {
+            return redirect('logout');
+        }
+
         $selected_post = Post::where('id', $id)->first();
         $comments = $selected_post->comments()->get();
         $total_comments = $selected_post->total_comments();
@@ -73,6 +90,10 @@ class PostController extends Controller
      */
     public function edit(string $id)
     {
+        if (!Auth::check()) {
+            return redirect('logout');
+        }
+
         $post = Post::where('id', $id)->first();
 
         $view_data = [
@@ -87,6 +108,10 @@ class PostController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if (!Auth::check()) {
+            return redirect('logout');
+        }
+
         $title = $request->input('title');
         $content = $request->input('content');
 
@@ -105,6 +130,10 @@ class PostController extends Controller
      */
     public function destroy(string $id)
     {
+        if (!Auth::check()) {
+            return redirect('logout');
+        }
+
         Post::where('id', $id)
             ->delete();
 

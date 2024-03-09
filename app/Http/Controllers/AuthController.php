@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use GuzzleHttp\RedirectMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
@@ -22,5 +23,13 @@ class AuthController extends Controller
         } else {
             return redirect('login')->with('error_message', 'Salah masukkin email ato password lu bre!');
         }
+    }
+
+    public function logout()
+    {
+        Session::flush();
+        Auth::logout();
+
+        return redirect('login');
     }
 }
