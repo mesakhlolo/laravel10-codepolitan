@@ -7,6 +7,7 @@ use App\Mail\BlogPosted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 
 class PostController extends Controller
@@ -61,6 +62,8 @@ class PostController extends Controller
             'title' => $title,
             'content' => $content,
         ]);
+
+        $this->notify_telegram($post);
 
         Mail::to(Auth::user()->email)->send(new BlogPosted($post));
 
@@ -142,5 +145,21 @@ class PostController extends Controller
             ->delete();
 
         return redirect('posts');
+    }
+
+    private function notify_telegram($post)
+    {
+        $api_token = "6999785729:AAFKPYaCIPFdrZND4yAoQF1T9PEnajuKdXY";
+        $url = "https://api.telegram.org/bot{$api_token}/sendMessage";
+        $chat_id = -1001716168333;
+        $content = "Ada postingan baru di blog lu cuy, judulnya :  <strong>\"{$post->title}\"</strong>";
+
+        $data = [
+            'chat_id' => $chat_id,
+            'text' => $content,
+            'parse_mode' => "HTML"
+        ];
+
+        Http::post($url, $data);
     }
 }
